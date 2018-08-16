@@ -148,9 +148,9 @@
      * discussion.
      */
 
-   // TODO add saveSelectedCities function here
+   // TODO add saveSelectedTimetables function here
 
-  // Save list of cities to localStorage.
+  // Save list of timetables to localStorage.
   app.saveSelectedTimetables = function() {
     var selectedTimetables = JSON.stringify(app.selectedTimetables);
     localStorage.selectedTimetables = selectedTimetables;
