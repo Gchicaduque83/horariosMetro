@@ -148,6 +148,14 @@
      * discussion.
      */
 
+   // TODO add saveSelectedCities function here
+
+  // Save list of cities to localStorage.
+  app.saveSelectedTimetables = function() {
+    var selectedTimetables = JSON.stringify(app.selectedTimetables);
+    localStorage.selectedTimetables = selectedTimetables;
+  };
+
     var initialStationTimetable = {
 
         key: 'metros/1/bastille/A',
@@ -168,7 +176,6 @@
 
     };
 
-
     /************************************************************************
      *
      * Code required to start the app
@@ -180,8 +187,27 @@
      *   SimpleDB (https://gist.github.com/inexorabletash/c8069c042b734519680c)
      ************************************************************************/
 
+app.selectedTimetables = localStorage.selectedTimetables;
+  if (app.selectedTimetables) {
+    app.selectedTimetables = JSON.parse(app.selectedTimetables);
+    app.selectedTimetables.forEach(function(city) {
+      app.getSchedule(city.key, city.label);
+    });
+  } else {
+    /* The user is using the app for the first time, or the user has not
+     * saved any cities, so show the user some fake data. A real app in this
+     * scenario could guess the user's location via IP lookup and then inject
+     * that data into the page.
+     */
+    app.updateTimetableCard(initialStationTimetable);
+    app.selectedTimetables = [
+       {key: initialStationTimetable.key, label: initialStationTimetable.label}
+    ];
+    app.saveSelectedTimetables();
+  }
+/*
     app.getSchedule('metros/1/bastille/A', 'Bastille, Direction La Défense');
     app.selectedTimetables = [
         {key: initialStationTimetable.key, label: initialStationTimetable.label}
-    ];
+    ];*/
 })();
