@@ -85,7 +85,21 @@
             app.container.appendChild(card);
             app.visibleCards[key] = card;
         }
-        card.querySelector('.card-last-updated').textContent = data.created;
+
+	// Verifies the data provide is newer than what's already visible
+	// on the card, if it's not bail, if it is, continue and update the
+	// time saved in the card
+	var cardLastUpdatedElem = card.querySelector('.card-last-updated');
+	var cardLastUpdated = cardLastUpdatedElem.textContent;
+	if (cardLastUpdated) {
+	   cardLastUpdated = new Date(cardLastUpdated);
+	   // Bail if the card has more recent data then the data
+	   if (dataLastUpdated.getTime() < cardLastUpdated.getTime()) {
+	      return;
+	   }
+	}
+	cardLastUpdatedElem.textContent = data.created;
+        //card.querySelector('.card-last-updated').textContent = data.created;
 
         var scheduleUIs = card.querySelectorAll('.schedule');
         for(var i = 0; i<4; i++) {
@@ -112,7 +126,6 @@
 
     app.getSchedule = function (key, label) {
         var url = 'https://api-ratp.pierre-grimaud.fr/v3/schedules/' + key;
-
         var request = new XMLHttpRequest();
         request.onreadystatechange = function () {
             if (request.readyState === XMLHttpRequest.DONE) {
@@ -204,6 +217,13 @@
        {key: initialStationTimetable.key, label: initialStationTimetable.label}
     ];
     app.saveSelectedTimetables();
+  }
+
+  // TODO add service worker code here
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+             .register('./service-worker.js')
+             .then(function() { console.log('Service Worker Registered'); });
   }
 /*
     app.getSchedule('metros/1/bastille/A', 'Bastille, Direction La Défense');
