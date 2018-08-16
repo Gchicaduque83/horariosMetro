@@ -29,8 +29,7 @@
     });
 
     document.getElementById('butAddCity').addEventListener('click', function () {
-
-
+	// Add the newly selected timetable
         var select = document.getElementById('selectTimetableToAdd');
         var selected = select.options[select.selectedIndex];
         var key = selected.value;
@@ -40,6 +39,7 @@
         }
         app.getSchedule(key, label);
         app.selectedTimetables.push({key: key, label: label});
+	app.saveSelectedTimetables();
         app.toggleAddDialog(false);
     });
 
@@ -187,7 +187,7 @@
      *   SimpleDB (https://gist.github.com/inexorabletash/c8069c042b734519680c)
      ************************************************************************/
 
-app.selectedTimetables = localStorage.selectedTimetables;
+  app.selectedTimetables = localStorage.selectedTimetables;
   if (app.selectedTimetables) {
     app.selectedTimetables = JSON.parse(app.selectedTimetables);
     app.selectedTimetables.forEach(function(city) {
